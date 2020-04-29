@@ -15,18 +15,18 @@ struct GAMES {
 };
 
 
-//...............................................................
+//............................CRUD...................................
 
 
 
-int getIndexById(GAMES* games, int& gameCount, int id)
+int getIndexById(GAMES* games, int& gameCount, int id)  //Funtion that gets every order’s index , searching it by its ID
 {
 
-	for (int j = 0; j < gameCount; j++)       //cycling array
+	for (int j = 0; j < gameCount; j++)       //cycling array indexes
 	{
-		if (games[j].id == id)  // checking if the id is correct
+		if (games[j].id == id)  
 		{
-			return j;
+			return j; //returning the index
 		}
 
 	}
@@ -34,25 +34,25 @@ int getIndexById(GAMES* games, int& gameCount, int id)
 }
 
 
-void createPurhase(GAMES* games, int& gameCount, int& maxId, GAMES newPurchase)
+void createPurchase(GAMES* games, int& gameCount, int& maxId, GAMES newPurchase)  //Funtion that creates a purchase by using the original copies 
+                                                                                  //of the game’s count and the maxId, becouse we have to change them.
 {
-
 	newPurchase.id = maxId++;
 	games[gameCount] = newPurchase;
 	gameCount++;
-
 }
 
-void updatePurhase(GAMES* games, int gameCount, int id, GAMES newPurchase)
+void updatePurchase(GAMES* games, int gameCount, int id, GAMES newPurchase)   //Funtion that  swaps the choosen purchase we want to update with a new one , called newPurchase. 
 {
 
 	int index = getIndexById(games, gameCount, id);  // the index gets the value of the returnd id from the function getIndexById
 
-	games[index] = newPurchase;
+	games[index] = newPurchase; //swaps the choosen purchase we want to update with a new one , called newPurchase. 
 
 }
 
-void deletePurhase(GAMES* games, int& gameCount, int id)
+
+void deletePurchase(GAMES* games, int& gameCount, int id)  //Funtion that moves purchases in the array  one step forward and deletes one of the purchases. 
 {
 
 	int index = getIndexById(games, gameCount, id);     // the index gets the value of the returnd id form the function getIndexById
@@ -62,28 +62,25 @@ void deletePurhase(GAMES* games, int& gameCount, int id)
 		games[j] = games[j + 1];           // moving  indexes of the array one index forward
 	}
 
-	gameCount--;            // making the cycle 1 index shorter thus removing the choosen index from the cycle 
+	gameCount--;            // making the cycle 1 index shorter therefore removing the choosen index from the cycle 
 
 }
 
 
-//................................................................
-
-
-
-GAMES getPurhase(GAMES* games, int& gameCount, int id)
+GAMES getPurchase(GAMES* games, int& gameCount, int id)  // Funtion that returns the purchases by their indexes.
 {
 
 	int index = getIndexById(games, gameCount, id);     // the index gets the value of the returnd id form the function getIndexById
 
-	return games[index];
+	return games[index];               //returns the purchases by their indexes.
 
 }
+
 
 float getTotalPerDay(GAMES* games, int gameCount, char* dayofweek)
 {
 	float sum = 0;
-	for (int i = 0; i < gameCount; i++)         //  cycling the array of elements
+	for (int i = 0; i < gameCount; i++)         //  cycling the indexes of the array
 	{
 		if (_strcmpi(games[i].dayofweek, dayofweek) == 0)  // checking if the day char inserted by the user 
 															//is the same as other day chars in the array
@@ -98,7 +95,7 @@ float getTotalPerDay(GAMES* games, int gameCount, char* dayofweek)
 float getTotalPerCashier(GAMES* games, int gameCount, char* cashier)
 {
 	float sum1 = 0;
-	for (int j = 0; j < gameCount; j++) //  cycling the array of elements
+	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
 	{
 		if (_strcmpi(games[j].cashier, cashier) == 0)  // checking if the cashier char inserted by the user 
 															//is the same as other cashier chars in the array
@@ -112,7 +109,7 @@ float getTotalPerCashier(GAMES* games, int gameCount, char* cashier)
 float getTotalPerRating(GAMES* games, int gameCount, int& rating)
 {
 	float sum2 = 0;
-	for (int j = 0; j < gameCount; j++) //  cycling the array  of elements
+	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
 	{
 		if (games[j].rating - rating == 0)  // checking if the rating  inserted by the user 
 															//is the same as other ratings  in the array
@@ -127,7 +124,7 @@ float getTotalPerRating(GAMES* games, int gameCount, int& rating)
 float getTotalPerGenre(GAMES* games, int gameCount, char* genre)
 {
 	float sum3 = 0;
-	for (int j = 0; j < gameCount; j++) //  cycling the array of elements
+	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
 	{
 		if (_strcmpi(games[j].genre, genre) == 0)  // checking if the genre char inserted by the user 
 															//is the same as other genre chars in the array
@@ -138,11 +135,66 @@ float getTotalPerGenre(GAMES* games, int gameCount, char* genre)
 	return sum3;        //returning the total money for the choosen game genre by the user/client
 }
 
+int gamesPerCashier(GAMES* games, int gameCount, char* cashier)
+{
+	float gameSum1 = 0;
+	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
+	{
+		if (_strcmpi(games[j].cashier, cashier) == 0)  // checking if the cashier char inserted by the user 
+															//is the same as other cashier chars in the array
+		{
+			gameSum1++;         
+		}
+	}
+	return gameSum1;        //returning the number of games
+}
 
-//.............................................................
+int gamesPerDay(GAMES* games, int gameCount, char* dayofweek)
+{
+	float gameSum2 = 0;
+	for (int i = 0; i < gameCount; i++)         //  cycling the indexes of the array
+	{
+		if (_strcmpi(games[i].dayofweek, dayofweek) == 0)  // checking if the day char inserted by the user 
+															//is the same as other day chars in the array
+		{
+			gameSum2++;
+		}
+	}
+	return gameSum2;        //returning the number of games
+}
+
+int gamesPerGenre(GAMES* games, int gameCount, char* genre)
+{
+	float gameSum3 = 0;
+	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
+	{
+		if (_strcmpi(games[j].genre, genre) == 0)  // checking if the genre char inserted by the user 
+															//is the same as other genre chars in the array
+		{
+			gameSum3++;       
+		}
+	}
+	return gameSum3;        //returning the number of games
+}
+
+int gamesPerRating(GAMES* games, int gameCount, int& rating)
+{
+	float gameSum4 = 0;
+	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
+	{
+		if (games[j].rating - rating == 0)  // checking if the rating  inserted by the user 
+															//is the same as other ratings  in the array
+		{
+			gameSum4++;         
+		}
+	}
+	return gameSum4;        //returning the number of games
+}
+
+//.......................PRESENTATION LAYER......................................
 
 
-void createPurhaseMenu(GAMES* games, int& gameCount, int& maxId)
+void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 {
 
 	GAMES game;
@@ -154,8 +206,14 @@ void createPurhaseMenu(GAMES* games, int& gameCount, int& maxId)
 	cin >> game.cashier;
 
 	cout << "Choose the rating from the scale of 0 to 100 : ";
-	cin >> game.rating;                                                     //filling all the elements in the array
-
+	cin >> game.rating;                                                   
+	if (game.rating > 100 or game.rating < 0)  //cheking if the rating is valid
+	{
+		cout << "You entered an invalid rating. Please try again with a rating from 0 to 100 : ";
+		cin >> game.rating;
+		cout << endl;
+	}
+	
 	cout << " Choose a day of the week : ";
 	cin >> game.dayofweek;
 
@@ -165,7 +223,7 @@ void createPurhaseMenu(GAMES* games, int& gameCount, int& maxId)
 	cout << " Choose a total : ";
 	cin >> game.total;
 
-	createPurhase(games, gameCount, maxId, game);   
+	createPurchase(games, gameCount, maxId, game);
 
 }
 
@@ -189,7 +247,7 @@ void showPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 		cout << games[j].id << " | Name : "
 			<< games[j].name << " | Cashier : "
 			<< games[j].cashier << " | Game rating( out of 100) : "
-			<< games[j].rating << " | Day : "                                      
+			<< games[j].rating << " | Day : "
 			<< games[j].dayofweek << " | Game genre : "
 			<< games[j].genre << " | Total : "
 			<< games[j].total << " | " << endl;
@@ -200,14 +258,14 @@ void showPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 }
 
 
-void deletePurhaseMenu(GAMES* games, int& gameCount, int& maxId)
+void deletePurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 {
 	int deleteGameId;
 
 	cout << "Enter the Id of the game purchase you want to delete : ";
 	cin >> deleteGameId;
 
-	deletePurhase(games, gameCount, deleteGameId);    //using the function that deletes elements from the array
+	deletePurchase(games, gameCount, deleteGameId);    //using the function that deletes elements from the array
 }
 
 
@@ -218,7 +276,7 @@ void editPurchaseMenu(GAMES* games, int& gameCount)
 	cout << "Enter the ID of the game purchase you want to change : ";
 	cin >> editedId;
 
-	GAMES editgame = getPurhase(games, gameCount, editedId);
+	GAMES editgame = getPurchase(games, gameCount, editedId);
 
 	cout << "1. Game name" << endl;
 	cout << "2. Cashier" << endl;
@@ -238,37 +296,37 @@ void editPurchaseMenu(GAMES* games, int& gameCount)
 	case 1:
 		cout << " Choose a new game name : ";
 		cin >> editgame.name;
-		updatePurhase(games, gameCount, editedId, editgame);
+		updatePurchase(games, gameCount, editedId, editgame);
 		break;
 
 	case 2:
 		cout << "Choose a new cashier : ";
 		cin >> editgame.cashier;
-		updatePurhase(games, gameCount, editedId, editgame);
+		updatePurchase(games, gameCount, editedId, editgame);
 		break;
 
 	case 3:
 		cout << "Choose a new game rating : ";
 		cin >> editgame.rating;
-		updatePurhase(games, gameCount, editedId, editgame);
+		updatePurchase(games, gameCount, editedId, editgame);
 		break;
 
 	case 4:
 		cout << "Choose  a new day of the week : ";
 		cin >> editgame.dayofweek;
-		updatePurhase(games, gameCount, editedId, editgame);
+		updatePurchase(games, gameCount, editedId, editgame);
 		break;
 
 	case 5:
 		cout << "Choose a new game genre : ";
 		cin >> editgame.genre;
-		updatePurhase(games, gameCount, editedId, editgame);
+		updatePurchase(games, gameCount, editedId, editgame);
 		break;
 
 	case 6:
 		cout << "Choose a new total : ";
 		cin >> editgame.total;
-		updatePurhase(games, gameCount, editedId, editgame);
+		updatePurchase(games, gameCount, editedId, editgame);
 		break;
 
 	default:
@@ -285,16 +343,20 @@ void showReports(GAMES* games, int& gameCount)
 	char userChar[10];          //used for getting char imputs from the user that are compared to other chars of the array
 	int userRating;             //used for getting int imputs from the user that are compared to other ints of the array
 	float TotalMoney;            //used to sum the total 
-
+	int TotalGames;              // used to sum the number of games
 
 	cout << "1. Get total per day" << endl;
-	cout << "2. Get total per cashier" << endl;  // reports menu
+	cout << "2. Get total per cashier" << endl;  
 	cout << "3. Get total per rating" << endl;
-	cout << "4. Get total per game genre" << endl;
+	cout << "4. Get total per game genre" << endl;                                       // reports menu
+	cout << "5. Show how much games are sold by a choosen cashier" << endl;
+	cout << "6.  Show how much games are sold in a choosen day" << endl;
+	cout << "7.  Show how much games are sold with a choosen genre" << endl;
+	cout << "8.  Show how much games are sold with a choosen rating" << endl;
 
 	cout << "Choose a report : ";
 
-	cin >> userchoice;
+	cin >> userchoice;  
 
 	switch (userchoice)
 	{
@@ -331,6 +393,38 @@ void showReports(GAMES* games, int& gameCount)
 		cout << "The total for the  " << userChar << " game genre  is : " << TotalMoney << endl;
 		break;
 
+	case 5:
+		cout << "Choose a cashier to get the number of games sold by him : ";
+		cin >> userChar;
+
+		TotalGames = gamesPerCashier(games, gameCount, userChar);          
+		cout << "The number of games sold by  " << userChar << " is : " << TotalGames << endl;
+		break;
+
+	case 6:
+		cout << "Choose a day to get the number of games sold during it : ";
+		cin >> userChar;
+
+		TotalGames = gamesPerDay(games, gameCount, userChar);
+		cout << "The number of games sold during " << userChar << " is : " << TotalGames << endl;
+		break;
+    
+	case 7:
+		cout << "Choose a genre to get the number of games sold with it: ";
+		cin >> userChar;
+
+		TotalGames = gamesPerGenre(games, gameCount, userChar);
+		cout << "The number of games sold with " << userChar << " as a game genre is : " << TotalGames << endl;
+		break;
+
+	case 8:
+		cout << "Choose a rating to get the number of games sold with it : ";
+		cin >> userRating;
+
+		TotalGames = gamesPerRating(games, gameCount, userRating);
+		cout << "The number of games sold with " << userRating << " rating  is : " << TotalGames << endl;
+		break;
+
 
 
 	default:
@@ -363,7 +457,7 @@ bool showMenu(GAMES* games, int& gameCount, int& maxId)
 		break;
 
 	case 2:
-		createPurhaseMenu(games, gameCount, maxId);
+		createPurchaseMenu(games, gameCount, maxId);
 		break;
 
 	case 3:
@@ -371,7 +465,7 @@ bool showMenu(GAMES* games, int& gameCount, int& maxId)
 		break;
 
 	case 4:
-		deletePurhaseMenu(games, gameCount, maxId);
+		deletePurchaseMenu(games, gameCount, maxId);
 		break;
 
 	case 5:
@@ -407,7 +501,7 @@ int main()
 
 	do {
 
-		doShowMenu = showMenu(games, gameCount, maxId);     
+		doShowMenu = showMenu(games, gameCount, maxId);
 	} while (doShowMenu);
 
 }
