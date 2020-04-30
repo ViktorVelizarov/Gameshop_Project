@@ -15,7 +15,7 @@ struct GAMES {
 };
 
 
-//............................CRUD...................................
+//............................DATA LAYER...................................
 
 
 
@@ -24,7 +24,7 @@ int getIndexById(GAMES* games, int& gameCount, int id)  //Funtion that gets ever
 
 	for (int j = 0; j < gameCount; j++)       //cycling array indexes
 	{
-		if (games[j].id == id)  
+		if (games[j].id == id)
 		{
 			return j; //returning the index
 		}
@@ -35,7 +35,7 @@ int getIndexById(GAMES* games, int& gameCount, int id)  //Funtion that gets ever
 
 
 void createPurchase(GAMES* games, int& gameCount, int& maxId, GAMES newPurchase)  //Funtion that creates a purchase by using the original copies 
-                                                                                  //of the game’s count and the maxId, becouse we have to change them.
+																				  //of the game’s count and the maxId, becouse we have to change them.
 {
 	newPurchase.id = maxId++;
 	games[gameCount] = newPurchase;
@@ -143,7 +143,7 @@ int gamesPerCashier(GAMES* games, int gameCount, char* cashier)
 		if (_strcmpi(games[j].cashier, cashier) == 0)  // checking if the cashier char inserted by the user 
 															//is the same as other cashier chars in the array
 		{
-			gameSum1++;         
+			gameSum1++;
 		}
 	}
 	return gameSum1;        //returning the number of games
@@ -171,7 +171,7 @@ int gamesPerGenre(GAMES* games, int gameCount, char* genre)
 		if (_strcmpi(games[j].genre, genre) == 0)  // checking if the genre char inserted by the user 
 															//is the same as other genre chars in the array
 		{
-			gameSum3++;       
+			gameSum3++;
 		}
 	}
 	return gameSum3;        //returning the number of games
@@ -185,7 +185,7 @@ int gamesPerRating(GAMES* games, int gameCount, int& rating)
 		if (games[j].rating - rating == 0)  // checking if the rating  inserted by the user 
 															//is the same as other ratings  in the array
 		{
-			gameSum4++;         
+			gameSum4++;
 		}
 	}
 	return gameSum4;        //returning the number of games
@@ -206,14 +206,14 @@ void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 	cin >> game.cashier;
 
 	cout << "Choose the rating from the scale of 0 to 100 : ";
-	cin >> game.rating;                                                   
+	cin >> game.rating;
 	if (game.rating > 100 or game.rating < 0)  //cheking if the rating is valid
 	{
 		cout << "You entered an invalid rating. Please try again with a rating from 0 to 100 : ";
 		cin >> game.rating;
 		cout << endl;
 	}
-	
+
 	cout << " Choose a day of the week : ";
 	cin >> game.dayofweek;
 
@@ -260,178 +260,215 @@ void showPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 
 void deletePurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 {
-	int deleteGameId;
+	if (gameCount > 0)          //checking if there are any purchases made yet
+	{
+		
+		int deleteGameId;
 
-	cout << "Enter the Id of the game purchase you want to delete : ";
-	cin >> deleteGameId;
+		cout << "Enter the Id of the game purchase you want to delete : ";
+		cin >> deleteGameId;
 
-	deletePurchase(games, gameCount, deleteGameId);    //using the function that deletes elements from the array
+		deletePurchase(games, gameCount, deleteGameId);    //using the function that deletes elements from the array
+
+	}
+	else
+	{
+		cout << "There are no game purchases inserted yet. " << endl << endl
+			<< "You can insert some using the |Create a Purchase| button of the menu." << endl << endl;
+	}
+
 }
 
 
 void editPurchaseMenu(GAMES* games, int& gameCount)
 {
 
-	int editedId;
-	cout << "Enter the ID of the game purchase you want to change : ";
-	cin >> editedId;
-
-	GAMES editgame = getPurchase(games, gameCount, editedId);
-
-	cout << "1. Game name" << endl;
-	cout << "2. Cashier" << endl;
-	cout << "3. Game rating( out of 100)" << endl;
-	cout << "4. Day of the week" << endl;                   // edit menu
-	cout << "5. Game genre" << endl;
-	cout << "6. Total money" << endl;
-	cout << "Type the field you want to change : ";
-
-	int change;
-	cin >> change;
-
-
-	switch (change)
+	if (gameCount > 0)          //checking if there are any purchases made yet
 	{
 
-	case 1:
-		cout << " Choose a new game name : ";
-		cin >> editgame.name;
-		updatePurchase(games, gameCount, editedId, editgame);
-		break;
+		
+		int editedId;
+		cout << "Enter the ID of the game purchase you want to change : ";
+		cin >> editedId;
 
-	case 2:
-		cout << "Choose a new cashier : ";
-		cin >> editgame.cashier;
-		updatePurchase(games, gameCount, editedId, editgame);
-		break;
+		GAMES editgame = getPurchase(games, gameCount, editedId);
 
-	case 3:
-		cout << "Choose a new game rating : ";
-		cin >> editgame.rating;
-		updatePurchase(games, gameCount, editedId, editgame);
-		break;
+		cout << "1. Game name" << endl;
+		cout << "2. Cashier" << endl;
+		cout << "3. Game rating( out of 100)" << endl;
+		cout << "4. Day of the week" << endl;                   // edit menu
+		cout << "5. Game genre" << endl;
+		cout << "6. Total money" << endl;
+		cout << "Type the field you want to change : ";
 
-	case 4:
-		cout << "Choose  a new day of the week : ";
-		cin >> editgame.dayofweek;
-		updatePurchase(games, gameCount, editedId, editgame);
-		break;
+		int change;
+		cin >> change;
 
-	case 5:
-		cout << "Choose a new game genre : ";
-		cin >> editgame.genre;
-		updatePurchase(games, gameCount, editedId, editgame);
-		break;
 
-	case 6:
-		cout << "Choose a new total : ";
-		cin >> editgame.total;
-		updatePurchase(games, gameCount, editedId, editgame);
-		break;
+		switch (change)
+		{
 
-	default:
-		cout << "The number you choose was not valid!" << endl;
-		break;
+		case 1:
+			cout << " Choose a new game name : ";
+			cin >> editgame.name;
+			updatePurchase(games, gameCount, editedId, editgame);
+			break;
+
+		case 2:
+			cout << "Choose a new cashier : ";
+			cin >> editgame.cashier;
+			updatePurchase(games, gameCount, editedId, editgame);
+			break;
+
+		case 3:
+			cout << "Choose a new game rating : ";
+			cin >> editgame.rating;
+			updatePurchase(games, gameCount, editedId, editgame);
+			break;
+
+		case 4:
+			cout << "Choose  a new day of the week : ";
+			cin >> editgame.dayofweek;
+			updatePurchase(games, gameCount, editedId, editgame);
+			break;
+
+		case 5:
+			cout << "Choose a new game genre : ";
+			cin >> editgame.genre;
+			updatePurchase(games, gameCount, editedId, editgame);
+			break;
+
+		case 6:
+			cout << "Choose a new total : ";
+			cin >> editgame.total;
+			updatePurchase(games, gameCount, editedId, editgame);
+			break;
+
+		default:
+			cout << "The number you choose was not valid!" << endl;
+			break;
+		}
+		
+
 	}
+	else
+	{
+		cout << "There are no game purchases inserted yet. " << endl << endl
+			<< "You can insert some using the |Create a Purchase| button of the menu." << endl << endl;
+	}
+
+	
 }
 
 
 void showReports(GAMES* games, int& gameCount)
 {
 
-	int userchoice;             // used to get the users choice from the menu
-	char userChar[10];          //used for getting char imputs from the user that are compared to other chars of the array
-	int userRating;             //used for getting int imputs from the user that are compared to other ints of the array
-	float TotalMoney;            //used to sum the total 
-	int TotalGames;              // used to sum the number of games
-
-	cout << "1. Get total per day" << endl;
-	cout << "2. Get total per cashier" << endl;  
-	cout << "3. Get total per rating" << endl;
-	cout << "4. Get total per game genre" << endl;                                       // reports menu
-	cout << "5. Show how much games are sold by a choosen cashier" << endl;
-	cout << "6.  Show how much games are sold in a choosen day" << endl;
-	cout << "7.  Show how much games are sold with a choosen genre" << endl;
-	cout << "8.  Show how much games are sold with a choosen rating" << endl;
-
-	cout << "Choose a report : ";
-
-	cin >> userchoice;  
-
-	switch (userchoice)
+	if (gameCount > 0)          //checking if there are any purchases made yet
 	{
 
-	case 1:
-		cout << "Choose a day of the week : ";
-		cin >> userChar;
+		int userchoice;             // used to get the users choice from the menu
+		char userChar[10];          //used for getting char imputs from the user that are compared to other chars of the array
+		int userRating;             //used for getting int imputs from the user that are compared to other ints of the array
+		float TotalMoney;            //used to sum the total 
+		int TotalGames;              // used to sum the number of games
 
-		TotalMoney = getTotalPerDay(games, gameCount, userChar);           // giving the sum we got from getTotalPerDay to TotalMoney
-		cout << "The total for all" << userChar << "s that week is : " << TotalMoney << endl;
-		break;
+		cout << "1. Get total per day" << endl;
+		cout << "2. Get total per cashier" << endl;
+		cout << "3. Get total per rating" << endl;
+		cout << "4. Get total per game genre" << endl;                                       // reports menu
+		cout << "5. Show how much games are sold by a choosen cashier" << endl;
+		cout << "6.  Show how much games are sold in a choosen day" << endl;
+		cout << "7.  Show how much games are sold with a choosen genre" << endl;
+		cout << "8.  Show how much games are sold with a choosen rating" << endl;
 
-	case 2:
-		cout << "Choose a cashier : ";
-		cin >> userChar;
+		cout << "Choose a report : ";
 
-		TotalMoney = getTotalPerCashier(games, gameCount, userChar);         // giving the sum we got from getTotalPerCashier to TotalMoney
-		cout << "The total for " << userChar << "  as a cashier is : " << TotalMoney << endl;
-		break;
+		cin >> userchoice;
 
-	case 3:
-		cout << "Choose a game rating : ";
-		cin >> userRating;
+		switch (userchoice)
+		{
 
-		TotalMoney = getTotalPerRating(games, gameCount, userRating);          // giving the sum we got from getTotalPerRating to TotalMoney
-		cout << "The total for " << userRating << " points of rating is : " << TotalMoney << endl;
-		break;
+		case 1:
+			cout << "Choose a day of the week : ";
+			cin >> userChar;
 
-	case 4:
-		cout << "Choose a game genre : ";
-		cin >> userChar;
+			TotalMoney = getTotalPerDay(games, gameCount, userChar);           // giving the sum we got from getTotalPerDay to TotalMoney
+			cout << "The total for all " << userChar << "s that week is : " << TotalMoney << endl;
+			break;
 
-		TotalMoney = getTotalPerGenre(games, gameCount, userChar);           // giving the sum we got from getTotalPerGenre to TotalMoney
-		cout << "The total for the  " << userChar << " game genre  is : " << TotalMoney << endl;
-		break;
+		case 2:
+			cout << "Choose a cashier : ";
+			cin >> userChar;
 
-	case 5:
-		cout << "Choose a cashier to get the number of games sold by him : ";
-		cin >> userChar;
+			TotalMoney = getTotalPerCashier(games, gameCount, userChar);         // giving the sum we got from getTotalPerCashier to TotalMoney
+			cout << "The total for " << userChar << "  as a cashier is : " << TotalMoney << endl;
+			break;
 
-		TotalGames = gamesPerCashier(games, gameCount, userChar);          
-		cout << "The number of games sold by  " << userChar << " is : " << TotalGames << endl;
-		break;
+		case 3:
+			cout << "Choose a game rating : ";
+			cin >> userRating;
 
-	case 6:
-		cout << "Choose a day to get the number of games sold during it : ";
-		cin >> userChar;
+			TotalMoney = getTotalPerRating(games, gameCount, userRating);          // giving the sum we got from getTotalPerRating to TotalMoney
+			cout << "The total for " << userRating << " points of rating is : " << TotalMoney << endl;
+			break;
 
-		TotalGames = gamesPerDay(games, gameCount, userChar);
-		cout << "The number of games sold during " << userChar << " is : " << TotalGames << endl;
-		break;
-    
-	case 7:
-		cout << "Choose a genre to get the number of games sold with it: ";
-		cin >> userChar;
+		case 4:
+			cout << "Choose a game genre : ";
+			cin >> userChar;
 
-		TotalGames = gamesPerGenre(games, gameCount, userChar);
-		cout << "The number of games sold with " << userChar << " as a game genre is : " << TotalGames << endl;
-		break;
+			TotalMoney = getTotalPerGenre(games, gameCount, userChar);           // giving the sum we got from getTotalPerGenre to TotalMoney
+			cout << "The total for the  " << userChar << " game genre  is : " << TotalMoney << endl;
+			break;
 
-	case 8:
-		cout << "Choose a rating to get the number of games sold with it : ";
-		cin >> userRating;
+		case 5:
+			cout << "Choose a cashier to get the number of games sold by him : ";
+			cin >> userChar;
 
-		TotalGames = gamesPerRating(games, gameCount, userRating);
-		cout << "The number of games sold with " << userRating << " rating  is : " << TotalGames << endl;
-		break;
+			TotalGames = gamesPerCashier(games, gameCount, userChar);
+			cout << "The number of games sold by  " << userChar << " is : " << TotalGames << endl;
+			break;
+
+		case 6:
+			cout << "Choose a day to get the number of games sold during it : ";
+			cin >> userChar;
+
+			TotalGames = gamesPerDay(games, gameCount, userChar);
+			cout << "The number of games sold during " << userChar << " is : " << TotalGames << endl;
+			break;
+
+		case 7:
+			cout << "Choose a genre to get the number of games sold with it: ";
+			cin >> userChar;
+
+			TotalGames = gamesPerGenre(games, gameCount, userChar);
+			cout << "The number of games sold with " << userChar << " as a game genre is : " << TotalGames << endl;
+			break;
+
+		case 8:
+			cout << "Choose a rating to get the number of games sold with it : ";
+			cin >> userRating;
+
+			TotalGames = gamesPerRating(games, gameCount, userRating);
+			cout << "The number of games sold with " << userRating << " rating  is : " << TotalGames << endl;
+			break;
 
 
 
-	default:
-		cout << "The number you choose was not valid!" << endl;         // case if the user types anything else
-		break;
+		default:
+			cout << "The number you choose was not valid!" << endl;         // case if the user types anything else
+			break;
+
+		}
 
 	}
+	else
+	{
+		cout << "There are no game purchases inserted yet. " << endl << endl
+			<< "You can insert some using the |Create a Purchase| button of the menu." << endl << endl;
+	}
+
+
 
 }
 
