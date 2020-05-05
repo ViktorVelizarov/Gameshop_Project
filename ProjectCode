@@ -5,11 +5,13 @@ using namespace std;
 struct GAMES {
 
 	string name;
-	int rating;
+	float rating;
 	char cashier[10] = "";
 	float total = 0;
 	char genre[10] = "";
 	char dayofweek[10] = "";
+	string sale  = "";
+	float salePercent;
 	int id = 1;
 
 };
@@ -106,7 +108,7 @@ float getTotalPerCashier(GAMES* games, int gameCount, char* cashier)
 	return sum1;        //returning the total for the choosen cashier by the user/client
 }
 
-float getTotalPerRating(GAMES* games, int gameCount, int& rating)
+float getTotalPerRating(GAMES* games, int gameCount, float& rating)
 {
 	float sum2 = 0;
 	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
@@ -177,7 +179,7 @@ int gamesPerGenre(GAMES* games, int gameCount, char* genre)
 	return gameSum3;        //returning the number of games
 }
 
-int gamesPerRating(GAMES* games, int gameCount, int& rating)
+int gamesPerRating(GAMES* games, int gameCount, float& rating)
 {
 	float gameSum4 = 0;
 	for (int j = 0; j < gameCount; j++) //  cycling the indexes of the array
@@ -191,39 +193,132 @@ int gamesPerRating(GAMES* games, int gameCount, int& rating)
 	return gameSum4;        //returning the number of games
 }
 
+
+
+
 //.......................PRESENTATION LAYER......................................
 
 
 void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 {
+	string s1("yes");
+	string s2("no");
 
-	GAMES game;
+	GAMES addGame;
 
 	cout << "Choose the name of the game : ";
-	cin >> game.name;
+	cin >> addGame.name;
 
 	cout << "Choose a cashier name :  ";
-	cin >> game.cashier;
+	cin >> addGame.cashier;
 
-	cout << "Choose the rating from the scale of 0 to 100 : ";
-	cin >> game.rating;
-	if (game.rating > 100 or game.rating < 0)  //cheking if the rating is valid
+
+		
+	cout << "Choose the rating from the scale with an integer from 0 to 100 : ";
+	cin >> addGame.rating;
+	int integerVal = int(addGame.rating);
+		
+	if (addGame.rating > 100 or addGame.rating < 0 or integerVal != addGame.rating)  //cheking if the rating is a valid integer and between 100 and 0
 	{
-		cout << "You entered an invalid rating. Please try again with a rating from 0 to 100 : ";
-		cin >> game.rating;
-		cout << endl;
+		do {                              // repeating the initialization for the rating until a valid integer has been entered
+
+			cout << "You entered an invalid rating. Please try again with an integer from 0 to 100 : ";    
+			cin >> addGame.rating;
+			 integerVal = int(addGame.rating);   //reseting the value for the new rating 
+			cout << endl;
+			
+		} while (addGame.rating > 100 or addGame.rating < 0  or integerVal != addGame.rating);
 	}
 
 	cout << " Choose a day of the week : ";
-	cin >> game.dayofweek;
+	cin >> addGame.dayofweek;
 
 	cout << " Choose your game genre : ";
-	cin >> game.genre;
+	cin >> addGame.genre;
 
-	cout << " Choose a total : ";
-	cin >> game.total;
+	cout << " Choose a price : ";
+	cin >> addGame.total;
 
-	createPurchase(games, gameCount, maxId, game);
+	if (addGame.total <= 0)   //cheking if the  price is a valid one
+	{
+		do {                           // repeating the initialization for the price until a valid one has been entered
+
+			cout << "You entered an invalid price. Please try again with a number bigger than 0 : ";
+			cin >> addGame.total;
+			cout << endl;
+		} while (addGame.total <=0);
+	}
+
+	cout << " Is there a sale for this game ( yes or no) : ";
+	cin >> addGame.sale;
+	int x = addGame.sale.compare(s1);
+	int y = addGame.sale.compare(s2);
+	if (x == 0)
+	{
+		
+		cout << "OK , how much is the sale( integer from 1 to 99 % ) : ";
+		cin >> addGame.salePercent;
+		int integerVall = int(addGame.salePercent);
+		cout << endl;
+		if (addGame.salePercent <= 0 or addGame.salePercent > 99 or integerVall != addGame.salePercent  ) //cheking if the  sale percentage is a valid integer between 1 and 99
+		{
+			do {                           // repeating the initialization for the sale percentage until a valid integer  has been entered
+
+				 cout << "You entered an invalid sale percentage. Please try again with a integer between 1 and 99 : ";
+				 cin >> addGame.total;
+			     integerVall = int(addGame.salePercent);
+			    	cout << endl;
+			} while (addGame.total <= 0 or addGame.total > 99 or integerVall != addGame.salePercent);
+		}
+
+	}
+	 if( y == 0)
+	{
+		cout << "OK, no sales";
+		cout << endl;
+		cout << endl;
+	}
+	
+	 if (x != 0 and y != 0)
+	 {
+		 do {
+
+			 cout << "You entered an invalid answer. Please try again with a \" yes \" or \" no \". : ";
+			 cin >> addGame.sale;
+			 x = addGame.sale.compare(s1);
+			 y = addGame.sale.compare(s2);
+
+			 cout << endl;
+			 if (x == 0)
+			 {
+				 cout << "OK , how much is the sale( integer from 1 to 99 % ) : ";
+				 cin >> addGame.salePercent;
+				 int integerVal2 = int(addGame.salePercent);
+				 cout << endl;
+				 if (addGame.salePercent <= 0 or addGame.salePercent > 99 or integerVal2 != addGame.salePercent)   //cheking if our sale percentage is a valid integer
+				 {
+					 do {                           // repeating the initialization for the sale percentage until a valid integer has been entered
+
+						 cout << "You entered an invalid sale percentage. Please try again with a integer between 1 and 99 : ";
+						 cin >> addGame.salePercent;
+						 integerVal2 = int(addGame.salePercent);  //reseting the value for the new percentage
+						 cout << endl;
+					 } while (addGame.total <= 0 or addGame.total > 99 or integerVal2 != addGame.salePercent);
+				 }
+			 }
+			 if (y == 0)
+			 {
+				 cout << "OK, no sales";
+				 cout << endl;
+				 cout << endl;
+			 }
+		 } while (y != 0 and x != 0);
+
+	 }
+
+	
+	
+	createPurchase(games, gameCount, maxId, addGame);
 
 }
 
@@ -250,7 +345,9 @@ void showPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 			<< games[j].rating << " | Day : "
 			<< games[j].dayofweek << " | Game genre : "
 			<< games[j].genre << " | Total : "
-			<< games[j].total << " | " << endl;
+			<< games[j].total << " | Sale in % : " << endl;
+			
+		    
 
 
 	}
@@ -262,7 +359,7 @@ void deletePurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 {
 	if (gameCount > 0)          //checking if there are any purchases made yet
 	{
-		
+
 		int deleteGameId;
 
 		cout << "Enter the Id of the game purchase you want to delete : ";
@@ -286,7 +383,7 @@ void editPurchaseMenu(GAMES* games, int& gameCount)
 	if (gameCount > 0)          //checking if there are any purchases made yet
 	{
 
-		
+
 		int editedId;
 		cout << "Enter the ID of the game purchase you want to change : ";
 		cin >> editedId;
@@ -348,7 +445,7 @@ void editPurchaseMenu(GAMES* games, int& gameCount)
 			cout << "The number you choose was not valid!" << endl;
 			break;
 		}
-		
+
 
 	}
 	else
@@ -357,7 +454,7 @@ void editPurchaseMenu(GAMES* games, int& gameCount)
 			<< "You can insert some using the |Create a Purchase| button of the menu." << endl << endl;
 	}
 
-	
+
 }
 
 
@@ -369,7 +466,7 @@ void showReports(GAMES* games, int& gameCount)
 
 		int userchoice;             // used to get the users choice from the menu
 		char userChar[10];          //used for getting char imputs from the user that are compared to other chars of the array
-		int userRating;             //used for getting int imputs from the user that are compared to other ints of the array
+	    float userRating;             //used for getting int imputs from the user that are compared to other ints of the array
 		float TotalMoney;            //used to sum the total 
 		int TotalGames;              // used to sum the number of games
 
@@ -478,7 +575,7 @@ bool showMenu(GAMES* games, int& gameCount, int& maxId)
 
 	int choice;
 	cout << " --- MAIN MENU ---" << endl;
-	cout << "1. Show all games" << endl;
+	cout << "1. Show all game purchases" << endl;
 	cout << "2. Create a purchase" << endl;
 	cout << "3. Edit a purchase" << endl;          // main menu
 	cout << "4. Delete a purchase" << endl;
