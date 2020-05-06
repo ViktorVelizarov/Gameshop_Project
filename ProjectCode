@@ -1,5 +1,6 @@
-#include <iostream>
+ #include <iostream>
 #include <string>
+#include <iomanip> 
 using namespace std;
 
 struct GAMES {
@@ -11,7 +12,8 @@ struct GAMES {
 	char genre[10] = "";
 	char dayofweek[10] = "";
 	string sale  = "";
-	float salePercent;
+	float salePercent = 0;
+	float totalDiscount;
 	int id = 1;
 
 };
@@ -193,14 +195,43 @@ int gamesPerRating(GAMES* games, int gameCount, float& rating)
 	return gameSum4;        //returning the number of games
 }
 
+float priceAfterSale(GAMES& addGame)
+{
+	if (addGame.salePercent != 0)
+	{
+		addGame.totalDiscount = addGame.total - ((addGame.total / 100) * addGame.salePercent);
+		
+	}
+	else
+	{
+		addGame.totalDiscount = addGame.total;
+	}
+	return addGame.totalDiscount;
+}
 
+int compareStringYes(string main, string yes)
+{
+	
+	int x =  main.compare(yes);
 
+	return x;
+}
+
+int compareStringNo(string main , string no)
+{
+	
+	int y = main.compare(no);
+
+	return y;
+}
 
 //.......................PRESENTATION LAYER......................................
 
 
 void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 {
+	int x;
+	int y;
 	string s1("yes");
 	string s2("no");
 
@@ -224,7 +255,7 @@ void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 
 			cout << "You entered an invalid rating. Please try again with an integer from 0 to 100 : ";    
 			cin >> addGame.rating;
-			 integerVal = int(addGame.rating);   //reseting the value for the new rating 
+			 integerVal = int(addGame.rating); //reseting the value for the new rating 
 			cout << endl;
 			
 		} while (addGame.rating > 100 or addGame.rating < 0  or integerVal != addGame.rating);
@@ -251,27 +282,28 @@ void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 
 	cout << " Is there a sale for this game ( yes or no) : ";
 	cin >> addGame.sale;
-	int x = addGame.sale.compare(s1);
-	int y = addGame.sale.compare(s2);
+	
+	x = compareStringYes(addGame.sale, s1);
 	if (x == 0)
 	{
 		
 		cout << "OK , how much is the sale( integer from 1 to 99 % ) : ";
 		cin >> addGame.salePercent;
-		int integerVall = int(addGame.salePercent);
+		int integerVal1 = int(addGame.salePercent);
 		cout << endl;
-		if (addGame.salePercent <= 0 or addGame.salePercent > 99 or integerVall != addGame.salePercent  ) //cheking if the  sale percentage is a valid integer between 1 and 99
+		if (addGame.salePercent <= 0 or addGame.salePercent > 99 or integerVal1 != addGame.salePercent) //cheking if the  sale percentage is a valid integer between 1 and 99
 		{
 			do {                           // repeating the initialization for the sale percentage until a valid integer  has been entered
 
-				 cout << "You entered an invalid sale percentage. Please try again with a integer between 1 and 99 : ";
-				 cin >> addGame.total;
-			     integerVall = int(addGame.salePercent);
-			    	cout << endl;
-			} while (addGame.total <= 0 or addGame.total > 99 or integerVall != addGame.salePercent);
+				cout << "You entered an invalid sale percentage. Please try again with a integer between 1 and 99 : ";
+				cin >> addGame.salePercent;
+				integerVal1 = int(addGame.salePercent);
+				cout << endl;
+			} while (addGame.salePercent > 99 or addGame.salePercent <= 0 or  integerVal1 != addGame.salePercent);
 		}
-
 	}
+
+	y = compareStringNo(addGame.sale , s2);
 	 if( y == 0)
 	{
 		cout << "OK, no sales";
@@ -285,9 +317,8 @@ void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 
 			 cout << "You entered an invalid answer. Please try again with a \" yes \" or \" no \". : ";
 			 cin >> addGame.sale;
-			 x = addGame.sale.compare(s1);
-			 y = addGame.sale.compare(s2);
-
+			 x = compareStringYes(addGame.sale , s1);
+			 y = compareStringNo(addGame.sale ,s2);
 			 cout << endl;
 			 if (x == 0)
 			 {
@@ -313,10 +344,11 @@ void createPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 				 cout << endl;
 			 }
 		 } while (y != 0 and x != 0);
-
+		 
 	 }
 
-	
+
+	  addGame.totalDiscount =   priceAfterSale(addGame);
 	
 	createPurchase(games, gameCount, maxId, addGame);
 
@@ -344,12 +376,19 @@ void showPurchaseMenu(GAMES* games, int& gameCount, int& maxId)
 			<< games[j].cashier << " | Game rating( out of 100) : "
 			<< games[j].rating << " | Day : "
 			<< games[j].dayofweek << " | Game genre : "
-			<< games[j].genre << " | Total : "
-			<< games[j].total << " | Sale in % : " << endl;
+			<< games[j].genre << " | Price : "
+			<<setprecision(2) << fixed <<games[j].total << " | Discounted price : "
+		<< setprecision(2) << fixed << games[j].totalDiscount << " | Sale in % : ";
+		if (games[j].salePercent == 0)
+		{
+			cout << "No sales" << endl << endl;
 			
-		    
-
-
+		}
+		else
+		{
+			cout << setprecision(0) << fixed << games[j].salePercent << endl << endl;
+			
+		}
 	}
 	cout << endl;
 }
@@ -396,6 +435,7 @@ void editPurchaseMenu(GAMES* games, int& gameCount)
 		cout << "4. Day of the week" << endl;                   // edit menu
 		cout << "5. Game genre" << endl;
 		cout << "6. Total money" << endl;
+		cout << "7. Sale Percentage" << endl;
 		cout << "Type the field you want to change : ";
 
 		int change;
@@ -439,6 +479,16 @@ void editPurchaseMenu(GAMES* games, int& gameCount)
 			cout << "Choose a new total : ";
 			cin >> editgame.total;
 			updatePurchase(games, gameCount, editedId, editgame);
+			editgame.totalDiscount = priceAfterSale(editgame);
+			updatePurchase(games, gameCount, editedId, editgame);
+			break;
+        
+		case 7:
+			cout << "Choose a new sale percantage : ";
+			cin >> editgame.salePercent;
+			updatePurchase(games, gameCount, editedId, editgame);
+			editgame.totalDiscount = priceAfterSale(editgame);
+			updatePurchase(games, gameCount, editedId, editgame);
 			break;
 
 		default:
@@ -469,6 +519,9 @@ void showReports(GAMES* games, int& gameCount)
 	    float userRating;             //used for getting int imputs from the user that are compared to other ints of the array
 		float TotalMoney;            //used to sum the total 
 		int TotalGames;              // used to sum the number of games
+		
+		
+
 
 		cout << "1. Get total per day" << endl;
 		cout << "2. Get total per cashier" << endl;
@@ -507,7 +560,7 @@ void showReports(GAMES* games, int& gameCount)
 			cin >> userRating;
 
 			TotalMoney = getTotalPerRating(games, gameCount, userRating);          // giving the sum we got from getTotalPerRating to TotalMoney
-			cout << "The total for " << userRating << " points of rating is : " << TotalMoney << endl;
+			cout << "The total for " << setprecision(2) << fixed << userRating << " points of rating is : " << TotalMoney << endl;
 			break;
 
 		case 4:
